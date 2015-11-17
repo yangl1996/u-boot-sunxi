@@ -512,16 +512,59 @@ void * memmove(void * dest,const void *src,size_t count)
 		return dest;
 
 	if (dest <= src) {
-		tmp = (char *) dest;
-		s = (char *) src;
-		while (count--)
-			*tmp++ = *s++;
+		// if able to use quadword-wise copy
+		if (src - dest >= 8) {
+			double *dDbl;
+			double *sDbl;
+
+			dDbl = (double *) dest;
+			sDbl = (double *) src;
+      // copy three quadword at a time
+			while (count >= 24) {
+				*dDbl++ = *sDbl++;
+				*dDbl++ = *sDbl++;
+				*dDbl++ = *sDbl++;
+				count -= 24;
+			  }
+
+			tmp = (char *) dDbl;
+			s = (char *) sDbl;
+			while (count--)
+				*tmp++ = *s++;
+		  }
+		else {
+			tmp = (char *) dest;
+			s = (char *) src;
+			while (count--)
+				*tmp++ = *s++;
+			}
 		}
 	else {
-		tmp = (char *) dest + count;
-		s = (char *) src + count;
-		while (count--)
-			*--tmp = *--s;
+		if (src - dest >= 8) {
+			double *dDbl;
+			double *sDbl;
+
+			dDbl = (double *) (dest + count);
+			sDbl = (double *) (src + count);
+      // copy three quadword at a time
+			while (count >= 24) {
+				*--dDbl = *--sDbl;
+				*--dDbl = *--sDbl;
+				*--dDbl = *--sDbl;
+				count -= 24;
+			  }
+
+			tmp = (char *) dDbl;
+			s = (char *) sDbl;
+			while (count--)
+				*--tmp = *--s;
+		  }
+		else {
+			tmp = (char *) dest + count;
+			s = (char *) src + count;
+			while (count--)
+				*--tmp = *--s;
+			}
 		}
 
 	return dest;
@@ -675,4 +718,3 @@ void *memchr_inv(const void *start, int c, size_t bytes)
 	return check_bytes8(start, value, bytes % 8);
 }
 #endif
-
