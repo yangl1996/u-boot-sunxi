@@ -45,10 +45,16 @@
 #define CONFIG_SYS_TEXT_BASE		0x4a000000
 
 /*
- * Display CPU and Board information
+ *  Don't Display CPU and Board information
  */
-#define CONFIG_DISPLAY_CPUINFO
-#define CONFIG_DISPLAY_BOARDINFO
+/*
+ #define CONFIG_DISPLAY_CPUINFO
+ #define CONFIG_DISPLAY_BOARDINFO
+ */
+/*
+ * Enable silent mode
+ */
+
 #define CONFIG_SILENT_CONSOLE
 #define CONFIG_SYS_DEVICE_NULLDEV
 #define CONFIG_SILENT_CONSOLE_UPDATE_ON_RELOC
