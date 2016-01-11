@@ -262,7 +262,11 @@
 	  " && " \
 	  RESET_WATCHDOG \
 	  " && " \
+          "echo Executing_bootm" \
+          " && " \
 	  "bootm 0x48000000" \
+          " && " \
+          "echo bootm_executed" \
 	  "\0" \
 	"boot_ram=" \
 	  "saved_stdout=$stdout;setenv stdout nc;"\
