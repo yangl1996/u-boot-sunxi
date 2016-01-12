@@ -161,6 +161,7 @@
 
 #define CONFIG_SYS_NO_FLASH
 
+
 #define CONFIG_SYS_MONITOR_LEN		(512 << 10)	/* 512 KiB */
 #define CONFIG_IDENT_STRING		" Allwinner Technology"
 
@@ -175,18 +176,23 @@
 
 #define CONFIG_BOOTCOMMAND \
 	RUN_BOOT_RAM \
+        "echo [DBG]starting boot command;" \
 	"if run loadbootenv; then " \
+          "echo [DBG]init branch 1;" \
 	  "echo Loaded environment from ${bootenv};" \
 	  "env import -t ${scriptaddr} ${filesize};" \
 	"fi;" \
 	"if test -n \\\"${uenvcmd}\\\"; then " \
+          "echo [DBG]init branch 2;" \
 	  "echo Running uenvcmd ...;" \
 	  "run uenvcmd;" \
 	"fi;" \
 	"if run loadbootscr; then "\
+          "echo [DBG]init branch 3;" \
 	  "echo Jumping to ${bootscr};" \
 	  "source ${scriptaddr};" \
 	"fi;" \
+	"echo [DBG]running autoboot;" \
 	"run autoboot;" \
 	""
 
