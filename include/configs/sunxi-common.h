@@ -40,6 +40,8 @@
 #endif
 #endif
 
+#define DEBUG
+
 #include <asm/arch/cpu.h>	/* get chip and board defs */
 
 #define CONFIG_SYS_TEXT_BASE		0x4a000000
