@@ -40,7 +40,6 @@
 #endif
 #endif
 
-#define DEBUG
 
 #include <asm/arch/cpu.h>	/* get chip and board defs */
 

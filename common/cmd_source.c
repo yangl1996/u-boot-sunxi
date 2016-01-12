@@ -13,7 +13,7 @@
  * script in a UNIX shell, hence the name for the command.
  */
 
-/* #define DEBUG */
+#define DEBUG
 
 #include <common.h>
 #include <command.h>
