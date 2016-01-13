@@ -524,13 +524,19 @@ static int boot_selected_os(int argc, char * const argv[], int state,
 		bootm_headers_t *images, boot_os_fn *boot_fn)
 {
 	if (images->os.type == IH_TYPE_STANDALONE) {
+                debug("[DBG]in standalone boot, before bootm_start_standalone\n");
 		/* This may return when 'autostart' is 'no' */
 		bootm_start_standalone(argc, argv);
+                debug("[DBG]bootm_start_standalone returned\n");
 		return 0;
 	}
+        debug("[DBG]before arch_preboot_os()\n");
 	arch_preboot_os();
+        debug("[DBG]before boot_fn()\n");
 	boot_fn(state, argc, argv, images);
+        debug("[DBG]boot_fn() returned\n");
 	if (state == BOOTM_STATE_OS_FAKE_GO) /* We expect to return */
+                debug("[DBG]fake boot\n");
 		return 0;
 	bootstage_error(BOOTSTAGE_ID_BOOT_OS_RETURNED);
 #ifdef DEBUG
@@ -631,6 +637,7 @@ static int do_bootm_states(cmd_tbl_t *cmdtp, int flag, int argc,
 
 		iflag = bootm_disable_interrupts();
 		ret = bootm_load_os(images, &load_end, 0);
+                debug("[DBG]returned to do_bootm_states\n");
 		if (ret == 0)
 			lmb_reserve(&images->lmb, images->os.load,
 				    (load_end - images->os.load));
@@ -643,7 +650,7 @@ static int do_bootm_states(cmd_tbl_t *cmdtp, int flag, int argc,
 			fixup_silent_linux();
 #endif
 	}
-
+	debug("[DBG]before relocate the ramdisk\n");
 	/* Relocate the ramdisk */
 #ifdef CONFIG_SYS_BOOT_RAMDISK_HIGH
 	if (!ret && (states & BOOTM_STATE_RAMDISK)) {
@@ -657,6 +664,7 @@ static int do_bootm_states(cmd_tbl_t *cmdtp, int flag, int argc,
 		}
 	}
 #endif
+
 #if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_LMB)
 	if (!ret && (states & BOOTM_STATE_FDT)) {
 		boot_fdt_add_mem_rsv_regions(&images->lmb, images->ft_addr);
@@ -664,7 +672,7 @@ static int do_bootm_states(cmd_tbl_t *cmdtp, int flag, int argc,
 					&images->ft_len);
 	}
 #endif
-
+	debug("[DBG]before need the OS boot function\n");
 	/* From now on, we need the OS boot function */
 	if (ret)
 		return ret;
@@ -706,7 +714,7 @@ static int do_bootm_states(cmd_tbl_t *cmdtp, int flag, int argc,
 		puts("subcommand not supported\n");
 		return ret;
 	}
-
+	debug("[DBG]before actually running the OS\n");
 	/* Now run the OS! We hope this doesn't return */
 	if (!ret && (states & BOOTM_STATE_OS_GO))
 		ret = boot_selected_os(argc, argv, BOOTM_STATE_OS_GO,
